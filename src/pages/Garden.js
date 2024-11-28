@@ -18,7 +18,7 @@ const Garden = () => {
         const response = await axios.get('http://localhost:5000/user-plants', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+        console.log('Fetched plants:', response.data); // Debug API response
         setPlants(response.data);
       } catch (error) {
         console.error('Error fetching plants:', error);
@@ -41,7 +41,7 @@ const Garden = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setPlants(plants.filter((userPlant) => userPlant.id !== userPlantId));
+      setPlants(plants.filter((userPlant) => userPlant.user_plant_id !== userPlantId));
       alert('Plant removed from your garden.');
     } catch (error) {
       console.error('Error removing plant:', error);
@@ -57,15 +57,15 @@ const Garden = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {plants.length > 0 ? (
-            plants.map((userPlant) =>
-              userPlant && userPlant.Plant ? (
+            plants.map((userPlant) => (
+              userPlant ? (
                 <PlantCard
-                  key={userPlant.id}
-                  plant={userPlant.Plant}
-                  onDelete={() => handleDeletePlant(userPlant.id)}
+                  key={userPlant.user_plant_id}
+                  plant={userPlant}
+                  onDelete={() => handleDeletePlant(userPlant.user_plant_id)}
                 />
               ) : null
-            )
+            ))
           ) : (
             <p className="text-center text-gray-500">No plants found in your garden.</p>
           )}
